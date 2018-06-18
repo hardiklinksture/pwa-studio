@@ -6,11 +6,38 @@ import { Items } from '..';
 
 configure({ adapter: new Adapter() });
 
-const items = Object.entries({
-    a: { id: 'a', val: '10' },
-    b: { id: 'b', val: '20' },
-    c: { id: 'c', val: '30' }
-});
+const items = [
+    [
+        1,
+        {
+            id: 1,
+            name: 'Test Product 1',
+            small_image: '/test/product/1.png',
+            price: {
+                regularPrice: {
+                    amount: {
+                        value: 100
+                    }
+                }
+            }
+        }
+    ],
+    [
+        2,
+        {
+            id: 2,
+            name: 'Test Product 2',
+            small_image: '/test/product/2.png',
+            price: {
+                regularPrice: {
+                    amount: {
+                        value: 100
+                    }
+                }
+            }
+        }
+    ]
+];
 
 test('renders a fragment', () => {
     const props = { items };
@@ -61,7 +88,7 @@ test('passes correct props to each child', () => {
     wrapper.children().forEach((node, i) => {
         const [key, item] = items[i];
 
-        expect(node.key()).toEqual(key);
+        expect(node.key()).toEqual(key.toString());
         expect(node.props()).toMatchObject({
             item,
             render: props.renderItem,
@@ -158,13 +185,13 @@ test('updates radio `selection` on child click', () => {
     expect(wrapper.state('selection')).toEqual(new Set());
 
     wrapper.childAt(0).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['a']));
+    expect(wrapper.state('selection')).toEqual(new Set([1]));
 
     wrapper.childAt(1).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['b']));
+    expect(wrapper.state('selection')).toEqual(new Set([2]));
 
     wrapper.childAt(0).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['a']));
+    expect(wrapper.state('selection')).toEqual(new Set([1]));
 });
 
 test('updates checkbox `selection` on child click', () => {
@@ -174,13 +201,13 @@ test('updates checkbox `selection` on child click', () => {
     expect(wrapper.state('selection')).toEqual(new Set());
 
     wrapper.childAt(0).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['a']));
+    expect(wrapper.state('selection')).toEqual(new Set([1]));
 
     wrapper.childAt(1).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['a', 'b']));
+    expect(wrapper.state('selection')).toEqual(new Set([1, 2]));
 
     wrapper.childAt(0).simulate('click');
-    expect(wrapper.state('selection')).toEqual(new Set(['b']));
+    expect(wrapper.state('selection')).toEqual(new Set([2]));
 });
 
 test('calls `syncSelection` after updating selection', () => {
